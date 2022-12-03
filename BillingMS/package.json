@@ -1,0 +1,35 @@
+{
+  "name": "billing-ms",
+  "version": "1.0.0",
+  "description": "Billing Micro-Service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "author": "Mustapha Habeeb",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "compression": "^1.7.4",
+    "config": "^3.3.7",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.0",
+    "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "mssql": "^8.0.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "engines": {
+    "node": "12.18.0"
+  }
+}
