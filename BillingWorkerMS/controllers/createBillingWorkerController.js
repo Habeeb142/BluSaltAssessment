@@ -17,7 +17,7 @@ exports.createBillingWorker = async (req, res) => {
             const result = await new CrudRepository().createBillingWorker(data);
             // wait 1000ms and update Billing Status
             await setTimeout(async() => {
-                await axios.patch(`http://localhost:3000/UpdateBilling/updateBillingStatus/${result.transactionId}`, {status: "success"}, {headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.T-vHdnp4DIpuFBRqFrWr42yG-4zxUmxm7z7YHJeMon8' }})
+                await axios.patch(`${process.env.BILLING_MS}/${result.transactionId}`, {status: "success"}, {headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.T-vHdnp4DIpuFBRqFrWr42yG-4zxUmxm7z7YHJeMon8' }})
             }, 1000);
          
             if (!result) {

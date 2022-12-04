@@ -26,7 +26,7 @@ class CrudRepository {
                         else {
                             const transactionReference = Math.random().toString(36).substring(2, 15)
                             try {
-                                await axios.post(`http://localhost:4000/CreateBillingWorker`, {transactionId: result.recordset[0].transactionId, transactionReference, bankName: data.bankName, bankAccountNumber: data.bankAccountNumber}, {headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.T-vHdnp4DIpuFBRqFrWr42yG-4zxUmxm7z7YHJeMon8' }})
+                                await axios.post(`${process.env.BILLING_WORKER_MS}/CreateBillingWorker`, {transactionId: result.recordset[0].transactionId, transactionReference, bankName: data.bankName, bankAccountNumber: data.bankAccountNumber}, {headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.T-vHdnp4DIpuFBRqFrWr42yG-4zxUmxm7z7YHJeMon8' }})
                                 resolve({
                                     isSuccess: true,
                                     message: 'Billing Successfully Created',
