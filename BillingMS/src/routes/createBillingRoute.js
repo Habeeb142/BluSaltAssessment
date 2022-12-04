@@ -10,6 +10,8 @@ router.post(
     '/', 
     authenticateUser, 
     body('customerId').isString({min: 1}),
+    body('bankName').isString({min: 1}),
+    body('bankAccountNumber').isString({min: 1}),
     body('transactionAmount').isNumeric({min: 1}),
     createBilling
 );

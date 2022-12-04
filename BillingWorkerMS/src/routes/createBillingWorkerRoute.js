@@ -9,7 +9,7 @@ const { authenticateUser } = require('../../services/authentication')
 router.post(
     '/', 
     authenticateUser, 
-    body('transactionId').isString({min: 1}),
+    body('transactionId').isNumeric({min: 1}),
     body('transactionReference').isString({min: 1}),
     body('bankName').isString({min: 1}),
     body('bankAccountNumber').isString({min: 1}),

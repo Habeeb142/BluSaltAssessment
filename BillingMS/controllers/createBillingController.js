@@ -18,6 +18,7 @@ exports.createBilling = async (req, res) => {
                 throw InternalServerError('Error Creating billing');
             }
             else {
+                
                 return res.status(200).json({
                     ...result
                 });

@@ -2,6 +2,7 @@ const { BadRequest } = require('http-errors');
 const NAMESPACE = 'CrudRepository';
 const logging = require('../../config/logging');
 const mssqlDatasource = require('./dataSource');
+const axios = require('axios')
 
 class CrudRepository {
     constructor() {}
@@ -23,13 +24,19 @@ class CrudRepository {
                             reject({message: 'Error creating a billing', err: true});
                         }
                         else {
-                            resolve({
-                                isSuccess: true,
-                                message: 'Billing Successfully Created',
-                                transactionAmount: data.transactionAmount,
-                                transactionId: result.recordset[0].transactionId,
-                                transactionReference: Math.random().toString(36).substring(2, 15)
-                            })
+                            const transactionReference = Math.random().toString(36).substring(2, 15)
+                            try {
+                                await axios.post(`http://localhost:4000/CreateBillingWorker`, {transactionId: result.recordset[0].transactionId, transactionReference, bankName: data.bankName, bankAccountNumber: data.bankAccountNumber}, {headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.T-vHdnp4DIpuFBRqFrWr42yG-4zxUmxm7z7YHJeMon8' }})
+                                resolve({
+                                    isSuccess: true,
+                                    message: 'Billing Successfully Created',
+                                    transactionAmount: data.transactionAmount,
+                                    transactionId: result.recordset[0].transactionId,
+                                    transactionReference
+                                })
+                            } catch (error) {
+                                reject(error);
+                            }
                         }
                     } catch (error) {
                         reject(error);
