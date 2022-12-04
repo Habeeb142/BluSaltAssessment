@@ -4,6 +4,12 @@ RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
+
+COPY package.json /usr/src/app
+
+RUN npm install
+
+COPY . /usr/src/app
 #Add environmental variables
 ARG SERVER
 ARG DB
@@ -22,12 +28,6 @@ ENV AUTH_JWT_SECRET $AUTH_JWT_SECRET
 ENV RABBIT_MQ_URL $RABBIT_MQ_URL
 ENV BILLING_WORKER_MS $BILLING_WORKER_MS
 ENV CUSTOMER_MS $CUSTOMER_MS
-
-COPY package.json /usr/src/app
-
-RUN npm install
-
-COPY . /usr/src/app
 
 EXPOSE 3000
 
