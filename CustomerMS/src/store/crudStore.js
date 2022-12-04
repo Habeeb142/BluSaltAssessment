@@ -71,7 +71,7 @@ class CrudRepository {
                         else {
                             resolve({
                                 isSuccess: true,
-                                message: 'Customers Successfully Fetched',
+                                message: 'Customers Sent to Queue',
                                 data: result.recordset
                             })
                         }
@@ -102,8 +102,8 @@ class CrudRepository {
                             if(result.recordset.length) {
                                 resolve({
                                     isSuccess: true,
-                                    message: 'Customer Successfully Fetched',
-                                    data: result.recordset[0]
+                                    message: 'Customer Sent to Queue',
+                                    data: result.recordset
                                 })
                             }
                             else {
@@ -141,8 +141,8 @@ class CrudRepository {
                                     if(result.recordset.length) {
                                         resolve({
                                             isSuccess: true,
-                                            message: 'Customer Successfully Fetched',
-                                            data: result.recordset[0]
+                                            message: 'Customer Sent to Queue',
+                                            data: result.recordset
                                         })
                                     }
                                     else {

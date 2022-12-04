@@ -7,7 +7,7 @@ class CrudRepository {
     constructor() {}
 
     // Create Billing
-    async createBilling(data) {
+    async createBillingWorker(data) {
         try {
     
             if (!data) {
@@ -15,28 +15,41 @@ class CrudRepository {
             }
             return new Promise(async (resolve, reject) => {
                 const res = await mssqlDatasource.connect();
-
-                res.query(`Exec CreateBilling @customerId = '${data.customerId}', @transactionAmount = ${data.transactionAmount}`, async(err, result) => {
-                    try {
-                        if (err) {
-                            logging.error(NAMESPACE, err.message || '', err);
-                            reject({message: 'Error creating a billing', err: true});
-                        }
-                        else {
+                res.query(`EXEC isTransactionIdExist @transactionId = '${data.transactionId}'`, async(err, result) => {
+                    try {   
+                        if(result.recordset[0].count) {
                             resolve({
-                                isSuccess: true,
-                                message: 'Billing Successfully Created',
-                                transactionAmount: data.transactionAmount,
-                                transactionId: result.recordset[0].transactionId,
-                                transactionReference: Math.random().toString(36).substring(2, 15)
+                                isSuccess: false,
+                                message: 'Transaction Id Already exist'
                             })
                         }
-                    } catch (error) {
+                        else {
+                            res.query(`Exec createBillingWorker @transactionId = '${data.transactionId}', @transactionReference = '${data.transactionReference}', @bankName = '${data.bankName}', @bankAccountNumber = '${data.bankAccountNumber}'`, async(err, result) => {
+                                try {
+                                    if (err) {
+                                        logging.error(NAMESPACE, err.message || '', err);
+                                        reject({message: 'Error creating billing worker', err: true});
+                                    }
+                                    else {
+                                        resolve({
+                                            isSuccess: true,
+                                            message: 'Billing Successfully Created',
+                                            transactionId: data.transactionId,
+                                            transactionReference: data.transactionReference
+                                        })
+                                    }
+                                } catch (error) {console.log(error)
+                                    reject(error);
+                                }
+                            });
+                        }
+                    }
+                    catch (error) {console.log(error)
                         reject(error);
                     }
-                });
-            })
-        }  
+                })
+             })
+        }
         catch (error) {
             reject(error);
         }
@@ -184,6 +197,84 @@ class CrudRepository {
                             reject(error);
                         }
                     })
+            });
+        } catch (error) {
+            reject(error);
+        }
+    }
+
+    // Get Billing Worker
+    async getBillingWorkerByTransactionId(transactionId) {
+        try {
+            return new Promise(async (resolve, reject) => {
+                const res = await mssqlDatasource.connect();
+                const selectSql = 
+                `EXEC getBillingWorkerByTransactionId @transactionId = '${transactionId}'`;
+                res.query(selectSql, (err, result) => {
+                            try {             
+                                if (err) {
+                                    logging.error(NAMESPACE, err.message || '', err);
+                                    reject(err);
+                                }
+                                else {
+                                    if(result.recordset.length) {
+                                        resolve({
+                                            isSuccess: true,
+                                            message: 'Billing Worker Successfully Sent to Queue',
+                                            data: result.recordset
+                                        })
+                                    }
+                                    else {
+                                        resolve({
+                                            isSuccess: true,
+                                            message: 'Biling not found',
+                                            data: {}
+                                        })
+                                    }
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+            });
+        } catch (error) {
+            reject(error);
+        }
+    }
+
+    // Get Billing Worker
+    async getAllBillingWorker() {
+        try {
+            return new Promise(async (resolve, reject) => {
+                const res = await mssqlDatasource.connect();
+                const selectSql = 
+                `EXEC getAllBillingWorker`;
+                res.query(selectSql, (err, result) => {
+                            try {             
+                                if (err) {
+                                    logging.error(NAMESPACE, err.message || '', err);
+                                    reject(err);
+                                }
+                                else {
+                                    if(result.recordset.length) {
+                                        resolve({
+                                            isSuccess: true,
+                                            message: 'Billing Worker Successfully Sent to Queue',
+                                            data: result.recordset
+                                        })
+                                    }
+                                    else {
+                                        resolve({
+                                            isSuccess: true,
+                                            message: 'Biling not found',
+                                            data: {}
+                                        })
+                                    }
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
             });
         } catch (error) {
             reject(error);

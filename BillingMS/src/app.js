@@ -1,4 +1,3 @@
-const tracer = require('dd-trace').init()
 const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
@@ -7,6 +6,7 @@ const logging = require('../config/logging');
 const app = express();
 const helmet = require('helmet');
 const NAMESPACE = 'App';
+const mq = require('../config/messageQueue')
 
 app.use(
     helmet({
@@ -83,5 +83,7 @@ app.use((err, req, res, next) => {
     res.status(err.status || 400);
     res.json({ error: err.message, message: 'Operation failed' });
 });
+
+mq.connectQueue()
 
 module.exports = app;

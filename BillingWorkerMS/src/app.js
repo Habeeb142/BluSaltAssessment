@@ -6,6 +6,7 @@ const logging = require('../config/logging');
 const app = express();
 const helmet = require('helmet');
 const NAMESPACE = 'App';
+
 const mq = require('../config/messageQueue')
 
 app.use(
@@ -35,41 +36,39 @@ app.use((req, res, next) => {
 /**
  * set up route here
  */
-const createCustomerRoute = require('./routes/createCustomerRoute');
-const getCustomerRoute = require('./routes/getCustomerRoute');
-const deleteCustomerRoute = require('./routes/deleteCustomerRoute');
-const updateCustomerRoute = require('./routes/updateCustomerRoute');
-
-const mssqlDatasource = require('./store/dataSource');
-/**
- * connect DB
- */
-mssqlDatasource
-    .connect()
-    .then(async (_) => {
-        logging.info(NAMESPACE, 'Database connected');
-    })
-    .catch((err) => {console.log(err)
-        logging.info(NAMESPACE, 'Error connecting to DB');
-    });
-
-// make use of morgan
-app.use(logger('dev'));
-// allow collection of payload from body
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({ extended: false }));
-
-app.get('/', (req, res) => {
-    res.status(200).json({
-        status: true,
-        message: 'Server running'
-    });
-});
-
-app.use('/CreateCustomer', createCustomerRoute);
-app.use('/GetCustomer', getCustomerRoute);
-app.use('/DeleteCustomer', deleteCustomerRoute);
-app.use('/UpdateCustomer', updateCustomerRoute);
+ const createBillingWorkerRoute = require('./routes/createBillingWorkerRoute');
+ const getBillingWorkerRoute = require('./routes/getBillingWorkerRoute');
+//  const updateBillingRoute = require('./routes/updateBillingRoute');
+ 
+ const mssqlDatasource = require('./store/dataSource');
+ /**
+  * connect DB
+  */
+ mssqlDatasource
+     .connect()
+     .then(async (_) => {
+         logging.info(NAMESPACE, 'Database connected');
+     })
+     .catch((err) => {console.log(err)
+         logging.info(NAMESPACE, 'Error connecting to DB');
+     });
+ 
+ // make use of morgan
+ app.use(logger('dev'));
+ // allow collection of payload from body
+ app.use(express.json({limit: '50mb'}));
+ app.use(express.urlencoded({ extended: false }));
+ 
+ app.get('/', (req, res) => {
+     res.status(200).json({
+         status: true,
+         message: 'Server running'
+     });
+ });
+ 
+ app.use('/CreateBillingWorker', createBillingWorkerRoute);
+ app.use('/GetBillingWorker', getBillingWorkerRoute);
+//  app.use('/UpdateBilling', updateBillingRoute);
 
 app.use((req, res, next) => {
     next(createError(404));

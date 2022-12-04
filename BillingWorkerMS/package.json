@@ -1,7 +1,7 @@
 {
-  "name": "billing-ms",
+  "name": "billing-worker-ms",
   "version": "1.0.0",
-  "description": "Billing Micro-Service",
+  "description": "Billing Worker Micro-Service",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

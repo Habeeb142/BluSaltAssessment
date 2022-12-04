@@ -1,5 +1,6 @@
 const { NotFound } = require('http-errors');
 const CrudRepository = require('../src/store/crudStore');
+const mq = require('../config/messageQueue')
 
 exports.getAllCustomers = async (req, res) => {
     try {
@@ -8,7 +9,8 @@ exports.getAllCustomers = async (req, res) => {
         if (!data) {
             throw NotFound('No Customer found');
         }
-
+        
+        await mq.sendData(data.data)
         return res.status(200).json({
             ...data
         });
@@ -30,6 +32,7 @@ exports.getCustomerByCustomerId = async (req, res) => {
             throw NotFound('No Customer found');
         }
 
+        await mq.sendData(data.data)
         return res.status(200).json({
             ...data
         });
@@ -50,7 +53,8 @@ exports.getCustomerByEmail = async (req, res) => {
         if (!data) {
             throw NotFound('No Customer found');
         }
-
+        
+        await mq.sendData(data.data)
         return res.status(200).json({
             ...data
         });
